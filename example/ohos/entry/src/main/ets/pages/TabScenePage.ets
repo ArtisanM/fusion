@@ -18,7 +18,7 @@ export default struct TabScenePage {
           ['backgroundColor', 0xFF546E7A]
         ]),
         false,
-        BigInt(0xFF546E7A)
+        0xFF546E7A
       )
     )
     const flutterEntry1 = new FusionEntry(

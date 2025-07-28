@@ -1,3 +1,7 @@
+## 4.10.1
+
+* Fixes the issue of `onNewWant` not being called on HarmonyOS platform.
+
 ## 4.10.0
 
 * HarmonyOS platform supports pre-installation.

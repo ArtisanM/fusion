@@ -98,28 +98,32 @@ export default class Fusion {
 }
 
 class FusionLifecycleCallback extends AbilityLifecycleCallback {
-  onAbilityCreate(ability: UIAbility): void {
+  override onAbilityCreate(ability: UIAbility): void {
     FlutterManager.getInstance().pushUIAbility(ability)
   }
 
-  onWindowStageCreate(ability: UIAbility, windowStage: window.WindowStage): void {
+  override onWindowStageCreate(ability: UIAbility, windowStage: window.WindowStage): void {
     windowStage.getMainWindowSync().setWindowLayoutFullScreen(true)
     FlutterManager.getInstance().pushWindowStage(ability, windowStage)
   }
 
-  onWindowStageDestroy(ability: UIAbility, windowStage: window.WindowStage): void {
+  override onWindowStageDestroy(ability: UIAbility, windowStage: window.WindowStage): void {
     FlutterManager.getInstance().popWindowStage(ability)
   }
 
-  onAbilityDestroy(ability: UIAbility): void {
+  override onAbilityDestroy(ability: UIAbility): void {
     FlutterManager.getInstance().popUIAbility(ability)
   }
 
-  onAbilityForeground(ability: UIAbility): void {
+  override onAbilityForeground(ability: UIAbility): void {
     FusionStackManager.instance.notifyEnterForeground()
   }
 
-  onAbilityBackground(ability: UIAbility): void {
+  override onAbilityBackground(ability: UIAbility): void {
     FusionStackManager.instance.notifyEnterBackground()
+  }
+
+  override onNewWant(ability: UIAbility): void {
+    Fusion.instance.defaultEngine?.getAbilityControlSurface()?.onNewWant(ability.lastRequestWant, null);
   }
 }

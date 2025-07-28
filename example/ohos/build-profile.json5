@@ -1,10 +1,24 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "common",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B308DFEE70B01677FBBACD26EC648D30B5A87AC3920158901BF6ED7B450C66AB8402B7753E2D7DC",
+          "profile": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p12",
+          "storePassword": "0000001B874F1C2DEC89CB6BEC95A0907130A92F9682D20532C1E7A90D246E9F885CF3325235C2EE0A4F2B"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "common",
         "compatibleSdkVersion": "5.0.0(12)",
         "runtimeOS": "HarmonyOS"
       }

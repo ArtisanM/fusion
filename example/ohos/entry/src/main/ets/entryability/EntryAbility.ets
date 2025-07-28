@@ -50,7 +50,7 @@ export default class EntryAbility extends UIAbility implements FusionRouteDelega
   pushFlutterRoute(name: string, args: Map<string, Object> | null): void {
     hilog.debug(0xFF00, EntryAbility.TAG, `pushFlutterRoute: name=${name}, args=${args}`)
     const transparent = (args?.get('transparent') ?? false) as boolean
-    const backgroundColor = (args?.get('backgroundColor') ?? BigInt(0xFFFFFFFF)) as bigint
+    const backgroundColor = (args?.get('backgroundColor') ?? 0xFFFFFFFF) as number
     const params = buildFusionParams(name, args, transparent, backgroundColor)
     Fusion.instance.navPathStack?.disableAnimation(transparent)
     Fusion.instance.navPathStack?.pushPathByName('CustomFusionPage', params)

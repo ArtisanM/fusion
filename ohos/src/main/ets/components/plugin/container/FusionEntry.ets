@@ -7,6 +7,7 @@ import FusionMessengerHandler from '../handler/FusionMessengerHandler';
 import { Context } from '@kit.AbilityKit';
 import FusionConstant from '../constant/FusionConstant';
 import { FlutterEngine, FlutterEntry, PlatformPlugin, ToolUtils } from '@ohos/flutter_ohos';
+import { recordToMap } from './FusionExt';
 
 export default class FusionEntry extends FlutterEntry implements FusionContainer {
   private _context: Context
@@ -15,7 +16,7 @@ export default class FusionEntry extends FlutterEntry implements FusionContainer
   private _isAttached = false
   private _uniqueId = `container_${util.generateRandomUUID(false)}`
   private engineBinding = Fusion.instance.engineBinding
-  private platformPlugin: PlatformPlugin | null = null
+  private platformPlugin?: PlatformPlugin | null
   public navDestinationId?: string | null
 
   /* override */ uniqueId(): string {
@@ -49,10 +50,11 @@ export default class FusionEntry extends FlutterEntry implements FusionContainer
     // Attach rendering pipeline.
     this.getFlutterView()?.attachToFlutterEngine(engine)
     // Configure platform channel
-    if (this.platformPlugin == null) {
+    if (!this.platformPlugin) {
       let platformChannel = this.engineBinding?.engine?.getPlatformChannel()
       this.platformPlugin = new PlatformPlugin(platformChannel!, this._context)
-      this.platformPlugin.callback.mainWindow = this.windowStage?.getMainWindowSync() ?? null
+      this.platformPlugin.setUIAbilityContext(this.getAbility().context)
+      this.platformPlugin.initWindow()
     }
     // Configure custom channel
     if (ToolUtils.implementsInterface(this, 'configureFlutterChannel')) {
@@ -139,8 +141,8 @@ export default class FusionEntry extends FlutterEntry implements FusionContainer
     }
     super.aboutToAppear()
     const routeName = (this._params[FusionConstant.ROUTE_NAME] ?? FusionConstant.INITIAL_ROUTE) as string
-    const routeArgs = this._params[FusionConstant.ROUTE_ARGS] as Map<string, Object>
-    this.engineBinding?.create(this._uniqueId, routeName, routeArgs)
+    const routeArgs = this._params[FusionConstant.ROUTE_ARGS] as Record<string, Object> | null
+    this.engineBinding?.create(this._uniqueId, routeName, routeArgs ? recordToMap(routeArgs) : null)
     this.getFlutterView()?.detachFromFlutterEngine()
     this.onContainerCreate()
     if (this.navDestinationId != null) {

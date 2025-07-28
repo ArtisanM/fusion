@@ -2,6 +2,7 @@ import FusionContainer from './FusionContainer'
 import FusionEntry from './FusionEntry'
 import Fusion from '../Fusion'
 import List from '@ohos.util.List'
+import { router } from '@kit.ArkUI'
 
 export default class FusionStackManager {
   private static _instance = new FusionStackManager()
@@ -72,6 +73,8 @@ export default class FusionStackManager {
     if (entry.navDestinationId != null) {
       Fusion.instance.navPathStack?.disableAnimation(entry.isTransparent())
       Fusion.instance.navPathStack?.removeByNavDestinationId(entry.navDestinationId)
+    } else {
+      router.back()
     }
   }
 

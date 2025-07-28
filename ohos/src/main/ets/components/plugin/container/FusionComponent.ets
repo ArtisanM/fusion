@@ -6,7 +6,7 @@ import FusionEntry from './FusionEntry'
 export default struct FusionComponent {
   @Require entry!: FusionEntry
   childMode: boolean = false
-  private bgColor = BigInt(0xFFFFFFFF)
+  private bgColor = 0xFFFFFFFF
   private static TAG = 'FusionComponent'
 
   override aboutToAppear(): void {
@@ -16,7 +16,7 @@ export default struct FusionComponent {
       this.entry.navDestinationId = navDestinationId
     }
     this.entry.aboutToAppear()
-    this.bgColor = (this.entry.params[FusionConstant.EXTRA_BACKGROUND_COLOR] ?? BigInt(0xFFFFFFFF)) as bigint
+    this.bgColor = (this.entry.params[FusionConstant.EXTRA_BACKGROUND_COLOR] ?? 0xFFFFFFFF) as number
   }
 
   override build(): void {
@@ -24,7 +24,7 @@ export default struct FusionComponent {
       FlutterPage({
         viewId: this.entry.getFlutterView()?.getId(),
         checkMouseWheel: false,
-        xComponentColor: this.entry.isTransparent() == true ? Color.Transparent : Number(this.bgColor)
+        xComponentColor: this.entry.isTransparent() ? Color.Transparent : this.bgColor
       })
     }
     .onVisibleAreaChange([0.0, 1.0], (isVisible, _) => {
