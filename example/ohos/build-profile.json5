@@ -5,13 +5,13 @@
         "name": "common",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.cer",
+          "certpath": "/Users/gant/.ohos/config/common_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B308DFEE70B01677FBBACD26EC648D30B5A87AC3920158901BF6ED7B450C66AB8402B7753E2D7DC",
-          "profile": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p7b",
+          "keyPassword": "0000001A731A24B129C1A76E76C8EBB182E4FBD40362659C672AFF68905774D525973E7D36C09191852C",
+          "profile": "/Users/gant/.ohos/config/common_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/gant/.ohos/config/default_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p12",
-          "storePassword": "0000001B874F1C2DEC89CB6BEC95A0907130A92F9682D20532C1E7A90D246E9F885CF3325235C2EE0A4F2B"
+          "storeFile": "/Users/gant/.ohos/config/common_ohos_ELVpOyAllNItDCOGNxaeqiQjvJ5ReKeA0TUF70bCYCc=.p12",
+          "storePassword": "0000001A41FFFD40197EDF0647BD59B306915DB7E4EDF9F137EDF11A5AF0225177768D4F7C25398F14CA"
         }
       }
     ],

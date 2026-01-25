@@ -6,8 +6,11 @@ import Fusion from '../Fusion';
 import FusionMessengerHandler from '../handler/FusionMessengerHandler';
 import { Context } from '@kit.AbilityKit';
 import FusionConstant from '../constant/FusionConstant';
-import { FlutterEngine, FlutterEntry, PlatformPlugin, ToolUtils } from '@ohos/flutter_ohos';
+import { FlutterEngine, FlutterEntry, Log, PlatformPlugin, ToolUtils } from '@ohos/flutter_ohos';
 import { recordToMap } from './FusionExt';
+import { window } from '@kit.ArkUI';
+
+const TAG = 'FusionEntry'
 
 export default class FusionEntry extends FlutterEntry implements FusionContainer {
   private _context: Context
@@ -33,6 +36,10 @@ export default class FusionEntry extends FlutterEntry implements FusionContainer
 
   /* override */ isAttached(): boolean {
     return this._isAttached
+  }
+
+  /* override */ isInSubWindow(): boolean {
+    return (this._params[FusionConstant.EXTRA_SUB_WINDOW] ?? false) as boolean
   }
 
   attachToContainer(): void {
@@ -140,6 +147,15 @@ export default class FusionEntry extends FlutterEntry implements FusionContainer
       top?.detachFromContainer()
     }
     super.aboutToAppear()
+    if (this.isInSubWindow()) {
+      try {
+        const win = window.findWindow(FusionConstant.TRANSPARENT_WINDOW)
+        win.setWindowLayoutFullScreen(true)
+        win.setWindowBackgroundColor('#00000000')
+      } catch (error) {
+        Log.e(TAG, error)
+      }
+    }
     const routeName = (this._params[FusionConstant.ROUTE_NAME] ?? FusionConstant.INITIAL_ROUTE) as string
     const routeArgs = this._params[FusionConstant.ROUTE_ARGS] as Record<string, Object> | null
     this.engineBinding?.create(this._uniqueId, routeName, routeArgs ? recordToMap(routeArgs) : null)

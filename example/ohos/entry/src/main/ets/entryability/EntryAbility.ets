@@ -1,6 +1,6 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
-import { buildFusionParams, Fusion, FusionRouteDelegate } from 'fusion';
-import { window } from '@kit.ArkUI';
+import { buildFusionParams, Fusion, FusionConstant, FusionPage, FusionRouteDelegate } from 'fusion';
+import { router, window } from '@kit.ArkUI';
 import hilog from '@ohos.hilog';
 import { GeneratedPluginRegistrant } from '../plugins/GeneratedPluginRegistrant';
 import { MethodChannel } from '@ohos/flutter_ohos';
@@ -52,7 +52,31 @@ export default class EntryAbility extends UIAbility implements FusionRouteDelega
     const transparent = (args?.get('transparent') ?? false) as boolean
     const backgroundColor = (args?.get('backgroundColor') ?? 0xFFFFFFFF) as number
     const params = buildFusionParams(name, args, transparent, backgroundColor)
-    Fusion.instance.navPathStack?.disableAnimation(transparent)
-    Fusion.instance.navPathStack?.pushPathByName('CustomFusionPage', params)
+    const topUrl = router.getState().path + router.getState().name
+    // if (useRoot) {
+    //   try {
+    //     await window.findWindow(FusionConstant.TRANSPARENT_WINDOW).destroyWindow()
+    //   } catch (error) {
+    //     LogTool.e(EntryAbility.TAG, error)
+    //   }
+    // }
+    if (topUrl === 'pages/IndexPage') {
+      router.pushUrl({url: 'pages/RouterFlutterPage', params: params})
+      // Fusion.instance.navPathStack?.disableAnimation(transparent)
+      // Fusion.instance.navPathStack?.pushPathByName('NavigationFlutterPage', params)
+    } else {
+      if (transparent) {
+        params[FusionConstant.EXTRA_SUB_WINDOW] = true
+        this.windowStage?.createSubWindow(FusionConstant.TRANSPARENT_WINDOW, (_, win) => {
+          const record: Record<string, Object> = {
+            'params': params
+          }
+          win.loadContentByName(FusionPage.ROUTE_NAME, new LocalStorage(record))
+          win.showWindow()
+        })
+      } else {
+        router.pushUrl({url: 'pages/RouterFlutterPage', params: params})
+      }
+    }
   }
 }

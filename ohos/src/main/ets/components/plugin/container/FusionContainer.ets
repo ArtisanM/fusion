@@ -9,5 +9,7 @@ export default interface FusionContainer {
 
   isAttached(): boolean
 
+  isInSubWindow(): boolean
+
   detachFromContainer(): void
 }

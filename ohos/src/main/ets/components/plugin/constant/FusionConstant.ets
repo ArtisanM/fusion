@@ -5,6 +5,8 @@ export default class FusionConstant {
   static FUSION_CHANNEL: string = 'fusion_channel'
   static EXTRA_BACKGROUND_MODE: string = 'background_mode'
   static EXTRA_BACKGROUND_COLOR: string = 'background_color'
+  static EXTRA_SUB_WINDOW: string = 'EXTRA_SUB_WINDOW'
+  static TRANSPARENT_WINDOW: string = 'TRANSPARENT_WINDOW'
   static FUSION_RESTORATION_HISTORY_KEY: string = 'history'
   static FUSION_RESTORATION_UNIQUE_ID_KEY: string = 'uniqueId'
 }

@@ -1,14 +1,18 @@
 import FusionConstant from '../constant/FusionConstant'
-import Fusion from '../Fusion'
 import FusionComponent from './FusionComponent'
 import FusionEntry from './FusionEntry'
 
+@Entry({ routeName: FusionPage.ROUTE_NAME })
 @Component
 export default struct FusionPage {
-  @Require param?: Record<string, Object>
+  static ROUTE_NAME = 'FusionPage'
+  param?: Record<string, Object>
   private entry?: FusionEntry
 
   override aboutToAppear(): void {
+    if (!this.param) {
+      this.param = LocalStorage.getShared().get('params') as Record<string, Object> | undefined
+    }
     this.entry = new FusionEntry(
       getContext(this),
       this.param
@@ -22,12 +26,28 @@ export default struct FusionPage {
     .mode(this.isTransparent() ? NavDestinationMode.DIALOG : NavDestinationMode.STANDARD)
     .hideTitleBar(true)
     .onBackPressed(() => {
-      Fusion.instance.engineBinding?.maybePop()
+      this.entry?.onBackPress()
       return true
     })
   }
 
   private isTransparent(): boolean {
     return (this.param![FusionConstant.EXTRA_BACKGROUND_MODE] ?? false) as boolean
+  }
+
+  // @Entry
+  override onPageShow() {
+    this.entry?.onPageShow()
+  }
+
+  // @Entry
+  override onPageHide() {
+    this.entry?.onPageHide()
+  }
+
+  // @Entry
+  override onBackPress(): boolean {
+    this.entry?.onBackPress()
+    return true
   }
 }

@@ -2,7 +2,11 @@ import FusionContainer from './FusionContainer'
 import FusionEntry from './FusionEntry'
 import Fusion from '../Fusion'
 import List from '@ohos.util.List'
-import { router } from '@kit.ArkUI'
+import { router, window } from '@kit.ArkUI'
+import FusionConstant from '../constant/FusionConstant'
+import { Log } from '@ohos/flutter_ohos'
+
+const TAG = 'FusionStackManager'
 
 export default class FusionStackManager {
   private static _instance = new FusionStackManager()
@@ -70,7 +74,13 @@ export default class FusionStackManager {
         }
       }
     }
-    if (entry.navDestinationId != null) {
+    if (entry.isInSubWindow()) {
+      try {
+        window.findWindow(FusionConstant.TRANSPARENT_WINDOW).destroyWindow()
+      } catch (error) {
+        Log.e(TAG, error)
+      }
+    } else if (entry.navDestinationId != null) {
       Fusion.instance.navPathStack?.disableAnimation(entry.isTransparent())
       Fusion.instance.navPathStack?.removeByNavDestinationId(entry.navDestinationId)
     } else {

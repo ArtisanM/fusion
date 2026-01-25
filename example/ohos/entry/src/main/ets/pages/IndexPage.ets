@@ -2,7 +2,7 @@ import { FusionNavigator, FusionEventManager, FusionRouteType, Fusion } from 'fu
 import { promptAction, window } from '@kit.ArkUI';
 import TabScenePage from './TabScenePage';
 import NormalPage from './NormalPage';
-import CustomFusionPage from './CustomFusionPage';
+import NavigationFlutterPage from './NavigationFlutterPage';
 
 @Entry
 @Component
@@ -13,8 +13,8 @@ struct IndexPage {
       NormalPage()
     } else if (name === "TabScenePage") {
       TabScenePage()
-    } else if (name === "CustomFusionPage") {
-      CustomFusionPage({ param })
+    } else if (name === "NavigationFlutterPage") {
+      NavigationFlutterPage({ param })
     }
   }
 

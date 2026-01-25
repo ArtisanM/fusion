@@ -2,7 +2,7 @@ import { FusionConstant, FusionComponent, Fusion, FusionEntry } from 'fusion';
 import CustomFusionEntry from './CustomFusionEntry';
 
 @Component
-export default struct CustomFusionPage {
+export default struct NavigationFlutterPage {
   @Require param?: Record<string, Object>
   private entry?: FusionEntry
 

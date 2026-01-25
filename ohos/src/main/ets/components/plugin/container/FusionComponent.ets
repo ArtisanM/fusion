@@ -4,7 +4,7 @@ import FusionEntry from './FusionEntry'
 
 @Component
 export default struct FusionComponent {
-  @Require entry!: FusionEntry
+  @Require entry: FusionEntry
   childMode: boolean = false
   private bgColor = 0xFFFFFFFF
   private static TAG = 'FusionComponent'

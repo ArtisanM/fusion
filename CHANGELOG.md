@@ -1,3 +1,7 @@
+## 4.10.2
+
+* Fixes some known bugs.
+
 ## 4.10.1
 
 * Fixes the issue of `onNewWant` not being called on HarmonyOS platform.
