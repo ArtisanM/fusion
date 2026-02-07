@@ -5,6 +5,8 @@ import List from '@ohos.util.List'
 import { router, window } from '@kit.ArkUI'
 import FusionConstant from '../constant/FusionConstant'
 import { Log } from '@ohos/flutter_ohos'
+import { UIAbility } from '@kit.AbilityKit'
+import common from '@ohos.app.ability.common'
 
 const TAG = 'FusionStackManager'
 
@@ -84,7 +86,11 @@ export default class FusionStackManager {
       Fusion.instance.navPathStack?.disableAnimation(entry.isTransparent())
       Fusion.instance.navPathStack?.removeByNavDestinationId(entry.navDestinationId)
     } else {
-      router.back()
+      if (router.getLength() === '1') {
+        (getContext(this) as common.UIAbilityContext).terminateSelf()
+      } else {
+        router.back()
+      }
     }
   }
 
