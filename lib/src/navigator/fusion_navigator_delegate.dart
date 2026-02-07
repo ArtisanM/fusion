@@ -296,6 +296,10 @@ class FusionNavigatorDelegate {
         }
       }
     }
+    // 修复后台执行popUntil操作时，路由表未及时更新问题
+    // 如果未及时更新，后台继续操作replace及remove方法会导致一些异常
+    FusionOverlayManager.instance.containerRoutesMap[targetContainer.uniqueId] =
+        routesInTargetContainer;
     Future.microtask(() {
       FusionChannel.instance
           .sync(targetContainer.uniqueId, targetContainer.pageEntities);
