@@ -8,6 +8,7 @@ import { window } from '@kit.ArkUI'
 import { FusionRouteDelegate } from './navigator/FusionNavigator'
 import { Options } from '@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngineGroup'
 import { DartEntrypoint } from '@ohos/flutter_ohos/src/main/ets/embedding/engine/dart/DartExecutor'
+import { deviceInfo } from '@kit.BasicServicesKit'
 
 export default class Fusion {
   private static _instance = new Fusion()
@@ -59,7 +60,8 @@ export default class Fusion {
     this.callbackId = context.getApplicationContext().on('abilityLifecycle', this.lifecycleCallback)
   }
 
-  public install(context: Context, delegate: FusionRouteDelegate, registerPlugins: (engine: FlutterEngine | null) => void): void {
+  public install(context: Context, delegate: FusionRouteDelegate,
+    registerPlugins: (engine: FlutterEngine | null) => void): void {
     if (this.isRunning) {
       return
     }
@@ -76,7 +78,8 @@ export default class Fusion {
     }
   }
 
-  private createAndRunEngine(registerPlugins: (engine: FlutterEngine | null) => void, initialRoute: string = FusionConstant.INITIAL_ROUTE): FlutterEngine | null{
+  private createAndRunEngine(registerPlugins: (engine: FlutterEngine | null) => void,
+    initialRoute: string = FusionConstant.INITIAL_ROUTE): FlutterEngine | null {
     let option = new Options(this.context!)
     option.setDartEntrypoint(DartEntrypoint.createDefault())
     option.setInitialRoute(initialRoute)
@@ -98,13 +101,22 @@ export default class Fusion {
 }
 
 class FusionLifecycleCallback extends AbilityLifecycleCallback {
+
+  private isDefaultFullScreen(): boolean {
+    return deviceInfo.deviceType != '2in1'
+  }
+
   override onAbilityCreate(ability: UIAbility): void {
+    AppStorage.setOrCreate('fontSizeScale', ability.context.config.fontSizeScale);
     FlutterManager.getInstance().pushUIAbility(ability)
   }
 
   override onWindowStageCreate(ability: UIAbility, windowStage: window.WindowStage): void {
     windowStage.getMainWindowSync().setWindowLayoutFullScreen(true)
     FlutterManager.getInstance().pushWindowStage(ability, windowStage)
+    if (this.isDefaultFullScreen()) {
+      FlutterManager.getInstance().setUseFullScreen(true, ability.context)
+    }
   }
 
   override onWindowStageDestroy(ability: UIAbility, windowStage: window.WindowStage): void {
