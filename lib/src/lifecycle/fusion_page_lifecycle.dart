@@ -63,6 +63,16 @@ class FusionPageLifecycleManager {
     if (route == null) {
       return;
     }
+    // Route<dynamic>? route = MyModalRoute.of(context);
+    // if (route == null) {
+    //   print('GTLog: unfind');
+    //   route = ModalRoute.of(context);
+    //   if (route == null) {
+    //     return;
+    //   }
+    // } else {
+    //   print('GTLog: find');
+    // }
     final listeners = _listenerMap[route] ?? <FusionPageLifecycleListener>{};
     listeners.add(listener);
     _listenerMap[route] = listeners;
@@ -158,5 +168,20 @@ class FusionPageLifecycleManager {
         }
       }
     });
+  }
+}
+
+class MyModalRoute {
+  static ModalRoute<dynamic>? of(BuildContext context) {
+    ModalRoute<dynamic>? route;
+    context.visitAncestorElements((element) {
+      if (element.widget.runtimeType.toString() == '_ModalScopeStatus') {
+        dynamic widget = element.widget;
+        route = widget.route as ModalRoute;
+        return false;
+      }
+      return true;
+    });
+    return route;
   }
 }

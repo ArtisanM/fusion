@@ -71,10 +71,10 @@ class FusionNavigator {
 
   static Route? get topRoute => FusionOverlayManager.instance.topRoute;
 
-  static NavigatorState? get navigator =>
-      FusionOverlayManager.instance.topRoute?.navigator;
+  static NavigatorState? get topNavigator =>
+      FusionOverlayManager.instance.topContainer()?.navigator;
 
-  static BuildContext? get context => navigator?.context;
+  static BuildContext? get context => topNavigator?.context;
 }
 
 enum FusionRouteType {

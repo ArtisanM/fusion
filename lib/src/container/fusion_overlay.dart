@@ -45,7 +45,7 @@ class FusionOverlayManager {
   }
 
   void add(FusionContainer container) {
-    containerRoutesMap[container.uniqueId] = [];
+    containerRoutesMap[container.uniqueId] = container.pages.map((page) => page.route).toList();
     final entry = FusionOverlayEntry(container);
     _entryList.add(entry);
     overlayKey.currentState?.insert(entry);
@@ -54,7 +54,7 @@ class FusionOverlayManager {
   void restore(List<FusionContainer> containers) {
     final entryList = <FusionOverlayEntry>[];
     for (final container in containers) {
-      containerRoutesMap[container.uniqueId] = [];
+      containerRoutesMap[container.uniqueId] = container.pages.map((page) => page.route).toList();
       final entry = FusionOverlayEntry(container);
       entryList.add(entry);
     }

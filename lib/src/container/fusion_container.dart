@@ -41,6 +41,7 @@ class FusionContainer extends ChangeNotifier {
 
   Future<T?> push<T extends Object?>(FusionPage<T> page) {
     page.container = this;
+    FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.add(page.route);
     _pages.add(page);
     notifyListeners();
     return page.popped;
@@ -50,7 +51,10 @@ class FusionContainer extends ChangeNotifier {
     if (_pages.isEmpty) {
       return;
     }
-    _pages.removeLast().didComplete(result);
+    final page = _pages.removeLast();
+    page.didComplete(result);
+    FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+        ?.remove(page.route);
     notifyListeners();
   }
 
@@ -60,6 +64,8 @@ class FusionContainer extends ChangeNotifier {
     }
     _pages.remove(page);
     page.didComplete(null);
+    FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+        ?.remove(page.route);
     notifyListeners();
   }
 
@@ -71,6 +77,8 @@ class FusionContainer extends ChangeNotifier {
       if (_pages.contains(page)) {
         _pages.remove(page);
         page.didComplete(null);
+        FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+            ?.remove(page.route);
       }
     }
     notifyListeners();
@@ -82,6 +90,11 @@ class FusionContainer extends ChangeNotifier {
       _pages.removeLast().didComplete(null);
     }
     _pages.add(page);
+    final routes = FusionOverlayManager.instance.containerRoutesMap[uniqueId];
+    if (routes?.isNotEmpty == true) {
+      routes?.removeLast();
+    }
+    routes?.add(page.route);
     notifyListeners();
     return page.popped;
   }
@@ -195,6 +208,22 @@ class NavigatorExtension extends Navigator {
 
 class NavigatorExtensionState extends NavigatorState {
   @override
+  Future<T?> push<T extends Object?>(Route<T> route) {
+    if (route is PopupRoute) {
+      final topContainer = FusionOverlayManager.instance.topContainer();
+      FusionOverlayManager.instance.containerRoutesMap[topContainer?.uniqueId]
+          ?.add(route);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        super.push(route);
+      });
+      // ignore: invalid_null_aware_operator
+      WidgetsBinding.instance?.scheduleFrame();
+      return route.popped;
+    }
+    return super.push(route);
+  }
+
+  @override
   Future<T?> pushNamed<T extends Object?>(String routeName,
       {Object? arguments}) {
     if (arguments == null) {
@@ -239,7 +268,24 @@ class NavigatorExtensionState extends NavigatorState {
       // showDialog, useRootNavigator: true
       topRoute.navigator?.pop<T>(result);
     } else {
+      if (topRoute is PopupRoute) {
+        final topContainer = FusionOverlayManager.instance.topContainer();
+        FusionOverlayManager.instance.containerRoutesMap[topContainer?.uniqueId]
+            ?.remove(topRoute);
+      }
       super.pop<T>(result);
     }
+  }
+
+  @override
+  void removeRoute(Route route) {
+    if (route is PopupRoute) {
+      final targetContainer =
+          FusionOverlayManager.instance.findContainerByRoute(route);
+      FusionOverlayManager
+          .instance.containerRoutesMap[targetContainer?.uniqueId]
+          ?.remove(route);
+    }
+    super.removeRoute(route);
   }
 }

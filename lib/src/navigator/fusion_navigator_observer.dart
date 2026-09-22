@@ -4,8 +4,6 @@ import '../container/fusion_overlay.dart';
 class FusionNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
-    final uniqueId = FusionOverlayManager.instance.topContainer()?.uniqueId;
-    FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.add(route);
     FusionNavigatorObserverManager.instance.navigatorObservers
         ?.forEach((observer) {
       observer.didPush(route, previousRoute);
@@ -36,14 +34,6 @@ class FusionNavigatorObserver extends NavigatorObserver {
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    final uniqueId = FusionOverlayManager.instance.topContainer()?.uniqueId;
-    if (oldRoute != null) {
-      FusionOverlayManager.instance.containerRoutesMap[uniqueId]
-          ?.remove(oldRoute);
-    }
-    if (newRoute != null) {
-      FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.add(newRoute);
-    }
     FusionNavigatorObserverManager.instance.navigatorObservers
         ?.forEach((observer) {
       observer.didReplace(newRoute: newRoute, oldRoute: oldRoute);
