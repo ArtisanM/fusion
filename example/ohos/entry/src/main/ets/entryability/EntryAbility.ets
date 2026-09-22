@@ -61,9 +61,9 @@ export default class EntryAbility extends UIAbility implements FusionRouteDelega
     //   }
     // }
     if (topUrl === 'pages/IndexPage') {
-      router.pushUrl({url: 'pages/RouterFlutterPage', params: params})
-      // Fusion.instance.navPathStack?.disableAnimation(transparent)
-      // Fusion.instance.navPathStack?.pushPathByName('NavigationFlutterPage', params)
+      // router.pushUrl({url: 'pages/RouterFlutterPage', params: params})
+      Fusion.instance.navPathStack?.disableAnimation(transparent)
+      Fusion.instance.navPathStack?.pushPathByName('NavigationFlutterPage', params)
     } else {
       if (transparent) {
         params[FusionConstant.EXTRA_SUB_WINDOW] = true

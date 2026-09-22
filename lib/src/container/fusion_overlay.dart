@@ -5,6 +5,7 @@ import '../app/fusion_home.dart';
 import '../container/fusion_container.dart';
 import '../container/fusion_page.dart';
 import '../navigator/fusion_navigator_observer.dart';
+import '../navigator/fusion_route_observer.dart';
 
 class FusionOverlayManager {
   FusionOverlayManager._();
@@ -45,7 +46,10 @@ class FusionOverlayManager {
   }
 
   void add(FusionContainer container) {
-    containerRoutesMap[container.uniqueId] = container.pages.map((page) => page.route).toList();
+    containerRoutesMap[container.uniqueId] = container.pages.map((page) {
+      FusionRouteObserverManager.instance.didAdd(page.route);
+      return page.route;
+    }).toList();
     final entry = FusionOverlayEntry(container);
     _entryList.add(entry);
     overlayKey.currentState?.insert(entry);
@@ -54,7 +58,10 @@ class FusionOverlayManager {
   void restore(List<FusionContainer> containers) {
     final entryList = <FusionOverlayEntry>[];
     for (final container in containers) {
-      containerRoutesMap[container.uniqueId] = container.pages.map((page) => page.route).toList();
+      containerRoutesMap[container.uniqueId] = container.pages.map((page) {
+        FusionRouteObserverManager.instance.didAdd(page.route);
+        return page.route;
+      }).toList();
       final entry = FusionOverlayEntry(container);
       entryList.add(entry);
     }
@@ -70,6 +77,7 @@ class FusionOverlayManager {
     _entryList.remove(entry);
     entry.remove();
     containerRoutesMap.remove(uniqueId)?.forEach((route) {
+      FusionRouteObserverManager.instance.didRemove(route);
       FusionNavigatorObserverManager.instance.navigatorObservers
           ?.forEach((observer) {
         observer.didRemove(route, null);

@@ -7,6 +7,7 @@ import '../fusion.dart';
 import '../interceptor/fusion_interceptor.dart';
 import '../navigator/fusion_navigator_delegate.dart';
 import '../navigator/fusion_navigator_observer.dart';
+import '../navigator/fusion_route_observer.dart';
 
 typedef FusionPageFactory = Widget Function(Map<String, dynamic>? args);
 typedef FusionPageCustomFactory = PageRoute Function(RouteSettings settings);
@@ -37,6 +38,7 @@ class FusionApp extends StatefulWidget {
   final Map<Type, Action<Intent>>? actions;
   final String? restorationScopeId;
   final List<NavigatorObserver>? navigatorObservers;
+  final List<FusionRouteObserver>? routeObservers;
   final List<FusionInterceptor>? interceptors;
 
   FusionApp({
@@ -67,6 +69,7 @@ class FusionApp extends StatefulWidget {
     this.actions,
     this.restorationScopeId,
     this.navigatorObservers,
+    this.routeObservers,
     this.interceptors,
     Duration transitionDuration = const Duration(milliseconds: 300),
     Duration reverseTransitionDuration = const Duration(milliseconds: 300),
@@ -78,6 +81,7 @@ class FusionApp extends StatefulWidget {
     FusionData.reverseTransitionDuration = reverseTransitionDuration;
     FusionNavigatorObserverManager.instance.navigatorObservers =
         navigatorObservers;
+    FusionRouteObserverManager.instance.routeObservers = routeObservers;
     if (interceptors != null) {
       Fusion.instance.interceptors.addAll(interceptors!);
     }

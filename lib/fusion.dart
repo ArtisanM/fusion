@@ -9,3 +9,4 @@ export 'src/lifecycle/fusion_page_lifecycle.dart';
 export 'src/navigator/fusion_navigator.dart';
 export 'src/data/fusion_state.dart';
 export 'src/interceptor/fusion_interceptor.dart';
+export 'src/navigator/fusion_route_observer.dart';

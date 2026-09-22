@@ -14,8 +14,7 @@ class DialogPage extends StatefulWidget {
   State<DialogPage> createState() => _DialogPageState();
 }
 
-class _DialogPageState extends State<DialogPage>
-    with FusionPageLifecycleMixin {
+class _DialogPageState extends State<DialogPage> with FusionPageLifecycleMixin {
   @override
   void initState() {
     super.initState();
@@ -53,6 +52,18 @@ class _DialogPageState extends State<DialogPage>
                         '/lifecycle',
                         routeType: FusionRouteType.flutter,
                       );
+                    }),
+                InkWell(
+                    child: const Text(
+                        'push(flutter) /lifecycle & remove /dialog_page'),
+                    onTap: () async {
+                      FusionNavigator.push(
+                        '/lifecycle',
+                        routeType: FusionRouteType.flutter,
+                      );
+                      Future.delayed(const Duration(milliseconds: 200), () {
+                        FusionNavigator.remove('/dialog_page');
+                      });
                     }),
                 InkWell(
                     child: const Text('push(flutter) /index'),

@@ -91,6 +91,16 @@ class _IndexPageState extends State<IndexPage> with FusionPageLifecycleMixin {
       body: ListView(
         children: [
           InkWell(
+            child: const Text('pop on background'),
+            onTap: () async {
+              await Future.delayed(const Duration(seconds: 2));
+              FusionNavigator.pop();
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
             child: const Text('push(adaption) /native_normal'),
             onTap: () {
               FusionNavigator.push(
@@ -365,6 +375,152 @@ class _IndexPageState extends State<IndexPage> with FusionPageLifecycleMixin {
           // const SizedBox(
           //   height: 20,
           // ),
+          InkWell(
+            child: const Text('push & showModalBottomSheet'),
+            onTap: () async {
+              FusionNavigator.push<String?>(
+                '/lifecycle',
+                routeArgs: {'title': 'Lifecycle Page'},
+                routeType: FusionRouteType.flutter,
+              );
+              showModalBottomSheet<bool>(
+                  useRootNavigator: false,
+                  routeSettings:
+                      const RouteSettings(name: '/test-bottom-dialog'),
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(),
+                      backgroundColor: Colors.red,
+                      elevation: 0,
+                      title: const Text('提示'),
+                      content: const Text('确定要退出吗？'),
+                      actions: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('关闭')),
+                        InkWell(
+                            child: const Text('push(flutter) /lifecycle'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/lifecycle',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                        InkWell(
+                            child: const Text('push(flutter) /index'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/index',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                      ],
+                    );
+                  },
+                  context: context);
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            child: const Text('showModalBottomSheet & push'),
+            onTap: () async {
+              showModalBottomSheet<bool>(
+                  useRootNavigator: false,
+                  routeSettings:
+                      const RouteSettings(name: '/test-bottom-dialog'),
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(),
+                      backgroundColor: Colors.red,
+                      elevation: 0,
+                      title: const Text('提示'),
+                      content: const Text('确定要退出吗？'),
+                      actions: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('关闭')),
+                        InkWell(
+                            child: const Text('push(flutter) /lifecycle'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/lifecycle',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                        InkWell(
+                            child: const Text('push(flutter) /index'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/index',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                      ],
+                    );
+                  },
+                  context: context);
+              final result = await FusionNavigator.push<String?>(
+                '/lifecycle',
+                routeArgs: {'title': 'Lifecycle Page'},
+                routeType: FusionRouteType.flutter,
+              );
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            child: const Text('showModalBottomSheet'),
+            onTap: () async {
+              await showModalBottomSheet<bool>(
+                  useRootNavigator: false,
+                  routeSettings:
+                      const RouteSettings(name: '/test-bottom-dialog'),
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(),
+                      backgroundColor: Colors.red,
+                      elevation: 0,
+                      title: const Text('提示'),
+                      content: const Text('确定要退出吗？'),
+                      actions: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('关闭')),
+                        InkWell(
+                            child: const Text('push(flutter) /lifecycle'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/lifecycle',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                        InkWell(
+                            child: const Text('push(flutter) /index'),
+                            onTap: () async {
+                              FusionNavigator.push(
+                                '/index',
+                                routeType: FusionRouteType.flutter,
+                              );
+                            }),
+                      ],
+                    );
+                  },
+                  context: context);
+              print('modalBottomSheet dismissed');
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           InkWell(
             child: const Text('show dialog'),
             onTap: () {

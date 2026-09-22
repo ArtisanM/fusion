@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../container/fusion_overlay.dart';
+import 'fusion_route_observer.dart';
 
 class FusionNavigatorObserver extends NavigatorObserver {
   @override
@@ -14,7 +15,12 @@ class FusionNavigatorObserver extends NavigatorObserver {
   void didPop(Route route, Route? previousRoute) {
     final uniqueId =
         FusionOverlayManager.instance.findContainerByRoute(route)?.uniqueId;
-    FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.remove(route);
+    bool result = FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+            ?.remove(route) ??
+        false;
+    if (result) {
+      FusionRouteObserverManager.instance.didRemove(route);
+    }
     FusionNavigatorObserverManager.instance.navigatorObservers
         ?.forEach((observer) {
       observer.didPop(route, previousRoute);
@@ -25,7 +31,12 @@ class FusionNavigatorObserver extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     final uniqueId =
         FusionOverlayManager.instance.findContainerByRoute(route)?.uniqueId;
-    FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.remove(route);
+    final result = FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+            ?.remove(route) ??
+        false;
+    if (result) {
+      FusionRouteObserverManager.instance.didRemove(route);
+    }
     FusionNavigatorObserverManager.instance.navigatorObservers
         ?.forEach((observer) {
       observer.didRemove(route, previousRoute);
@@ -49,16 +60,23 @@ class FusionRootNavigatorObserver extends NavigatorObserver {
       return;
     }
     FusionOverlayManager.instance.rootRoutes.add(route);
+    FusionRouteObserverManager.instance.didAdd(route);
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    FusionOverlayManager.instance.rootRoutes.remove(route);
+    final result = FusionOverlayManager.instance.rootRoutes.remove(route);
+    if (result) {
+      FusionRouteObserverManager.instance.didRemove(route);
+    }
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
-    FusionOverlayManager.instance.rootRoutes.remove(route);
+    final result = FusionOverlayManager.instance.rootRoutes.remove(route);
+    if (result) {
+      FusionRouteObserverManager.instance.didRemove(route);
+    }
   }
 }
 

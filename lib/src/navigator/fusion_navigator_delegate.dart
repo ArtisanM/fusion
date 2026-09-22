@@ -9,6 +9,7 @@ import '../interceptor/fusion_interceptor.dart';
 import '../lifecycle/fusion_page_lifecycle.dart';
 import 'fusion_navigator.dart';
 import 'fusion_navigator_observer.dart';
+import 'fusion_route_observer.dart';
 
 class FusionNavigatorDelegate {
   FusionNavigatorDelegate._();
@@ -121,6 +122,7 @@ class FusionNavigatorDelegate {
     // remove root dialogs
     for (final route in FusionOverlayManager.instance.rootRoutes) {
       route.navigator?.removeRoute(route);
+      FusionRouteObserverManager.instance.didRemove(route);
     }
     // remove other container with pages and dialogs
     for (final container in containers) {
@@ -188,6 +190,7 @@ class FusionNavigatorDelegate {
     FusionOverlayManager.instance.containerRoutesMap
         .remove(uniqueId)
         ?.forEach((route) {
+      FusionRouteObserverManager.instance.didRemove(route);
       FusionNavigatorObserverManager.instance.navigatorObservers
           ?.forEach((observer) {
         if (isPop) {
@@ -241,6 +244,7 @@ class FusionNavigatorDelegate {
         return;
       }
       route.navigator?.pop();
+      FusionRouteObserverManager.instance.didRemove(route);
     }
     if (rootRoutes.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 50));
@@ -302,6 +306,7 @@ class FusionNavigatorDelegate {
     for (final route in FusionOverlayManager.instance.rootRoutes.reversed) {
       if (route.settings.name == routeName) {
         route.navigator?.removeRoute(route);
+        FusionRouteObserverManager.instance.didRemove(route);
         return;
       }
     }

@@ -3,6 +3,7 @@ import '../container/fusion_overlay.dart';
 import '../container/fusion_page.dart';
 import '../navigator/fusion_navigator_delegate.dart';
 import '../navigator/fusion_navigator_observer.dart';
+import '../navigator/fusion_route_observer.dart';
 
 class FusionContainer extends ChangeNotifier {
   FusionContainer(this.uniqueId, FusionPage page)
@@ -42,6 +43,7 @@ class FusionContainer extends ChangeNotifier {
   Future<T?> push<T extends Object?>(FusionPage<T> page) {
     page.container = this;
     FusionOverlayManager.instance.containerRoutesMap[uniqueId]?.add(page.route);
+    FusionRouteObserverManager.instance.didAdd(page.route);
     _pages.add(page);
     notifyListeners();
     return page.popped;
@@ -53,8 +55,12 @@ class FusionContainer extends ChangeNotifier {
     }
     final page = _pages.removeLast();
     page.didComplete(result);
-    FusionOverlayManager.instance.containerRoutesMap[uniqueId]
-        ?.remove(page.route);
+    final success = FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+            ?.remove(page.route) ??
+        false;
+    if (success) {
+      FusionRouteObserverManager.instance.didRemove(page.route);
+    }
     notifyListeners();
   }
 
@@ -64,8 +70,12 @@ class FusionContainer extends ChangeNotifier {
     }
     _pages.remove(page);
     page.didComplete(null);
-    FusionOverlayManager.instance.containerRoutesMap[uniqueId]
-        ?.remove(page.route);
+    final result = FusionOverlayManager.instance.containerRoutesMap[uniqueId]
+            ?.remove(page.route) ??
+        false;
+    if (result) {
+      FusionRouteObserverManager.instance.didRemove(page.route);
+    }
     notifyListeners();
   }
 
@@ -77,8 +87,13 @@ class FusionContainer extends ChangeNotifier {
       if (_pages.contains(page)) {
         _pages.remove(page);
         page.didComplete(null);
-        FusionOverlayManager.instance.containerRoutesMap[uniqueId]
-            ?.remove(page.route);
+        final result = FusionOverlayManager
+                .instance.containerRoutesMap[uniqueId]
+                ?.remove(page.route) ??
+            false;
+        if (result) {
+          FusionRouteObserverManager.instance.didRemove(page.route);
+        }
       }
     }
     notifyListeners();
@@ -92,9 +107,13 @@ class FusionContainer extends ChangeNotifier {
     _pages.add(page);
     final routes = FusionOverlayManager.instance.containerRoutesMap[uniqueId];
     if (routes?.isNotEmpty == true) {
-      routes?.removeLast();
+      final route = routes?.removeLast();
+      if (route != null) {
+        FusionRouteObserverManager.instance.didRemove(route);
+      }
     }
     routes?.add(page.route);
+    FusionRouteObserverManager.instance.didAdd(page.route);
     notifyListeners();
     return page.popped;
   }
@@ -213,6 +232,7 @@ class NavigatorExtensionState extends NavigatorState {
       final topContainer = FusionOverlayManager.instance.topContainer();
       FusionOverlayManager.instance.containerRoutesMap[topContainer?.uniqueId]
           ?.add(route);
+      FusionRouteObserverManager.instance.didAdd(route);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         super.push(route);
       });
@@ -270,8 +290,13 @@ class NavigatorExtensionState extends NavigatorState {
     } else {
       if (topRoute is PopupRoute) {
         final topContainer = FusionOverlayManager.instance.topContainer();
-        FusionOverlayManager.instance.containerRoutesMap[topContainer?.uniqueId]
-            ?.remove(topRoute);
+        final result = FusionOverlayManager
+                .instance.containerRoutesMap[topContainer?.uniqueId]
+                ?.remove(topRoute) ??
+            false;
+        if (result) {
+          FusionRouteObserverManager.instance.didRemove(topRoute);
+        }
       }
       super.pop<T>(result);
     }
@@ -282,9 +307,13 @@ class NavigatorExtensionState extends NavigatorState {
     if (route is PopupRoute) {
       final targetContainer =
           FusionOverlayManager.instance.findContainerByRoute(route);
-      FusionOverlayManager
-          .instance.containerRoutesMap[targetContainer?.uniqueId]
-          ?.remove(route);
+      final result = FusionOverlayManager
+              .instance.containerRoutesMap[targetContainer?.uniqueId]
+              ?.remove(route) ??
+          false;
+      if (result) {
+        FusionRouteObserverManager.instance.didRemove(route);
+      }
     }
     super.removeRoute(route);
   }

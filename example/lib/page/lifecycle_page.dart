@@ -31,6 +31,29 @@ class _LifecyclePageState extends State<LifecyclePage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             InkWell(
+              child: const Text('remove & push'),
+              onTap: () {
+                FusionNavigator.remove('/lifecycle');
+                FusionNavigator.push('/list');
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              child: const Text('popUntil on background'),
+              onTap: () async {
+                await Future.delayed(const Duration(seconds: 2));
+                FusionNavigator.popUntil('/index');
+                print('topRouteName1=${FusionNavigator.topRouteName}');
+                await Future.delayed(const Duration(seconds: 1));
+                print('topRouteName2=${FusionNavigator.topRouteName}');
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            InkWell(
               child: const Text('push(native) /native_normal'),
               onTap: () {
                 FusionNavigator.push(
